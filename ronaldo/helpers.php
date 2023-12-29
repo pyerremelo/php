@@ -1,4 +1,29 @@
 <?php
+
+/**
+ * Valida a URL inserido pelo usuário
+ * 
+ * @param string $url URL digitado pelo usuário
+ * @return bool Retorna true caso a url seja válida e false caso não
+ */
+function validarUrl (string $url):bool
+{
+    return filter_var($url, FILTER_VALIDATE_URL);
+}
+
+
+/**
+ * Valida o e-mail inserido pelo usuário
+ * 
+ * @param string $email Endereço de email digitado pelo usuário
+ * @return bool Retorna true caso o email seja válido e false caso não
+ */
+function validarEmail (string $email):bool
+{
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+
 /**
  * Conta o tempo decorrido de uma data
  * 
@@ -48,6 +73,12 @@ function formatarValor (float $valor=null):string
     return number_format(($valor ? $valor : 0), 2, ',', '.');
 }
 
+
+/**
+ * Saúda de acordo com o horário do dia
+ * 
+ * @return string Saudação para o usuário
+ */
 function saudacao(): string
 {
     $hora = date('H');
@@ -61,10 +92,9 @@ function saudacao(): string
     } else {
         $saudacao = 'Boa noite';
     }
-    //echo date('\H\o\j\e é d/m/Y \à\s G', time());
-    //echo "<BR>";
     return $saudacao;
 }
+
 
 /**
  * Resume um texto
@@ -74,7 +104,6 @@ function saudacao(): string
  * @param string $continue | opcional | o que deve ser exibido ao final do resumo
  * @return string texto resumido
  */
-
 function resumirTexto(string $texto, int $limite, string $continue = '...')
 {
 
