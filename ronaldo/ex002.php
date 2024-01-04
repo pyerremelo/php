@@ -1,8 +1,6 @@
 <?php
-    function saudacao ()
-    {
-        return 'Boa tarde';
-    }
+
+    echo "<h1>Função com texto vindo de uma variável</h1>";
 
     $texto = 'Texto para resumir vindo de uma variável';
     $a = 54;

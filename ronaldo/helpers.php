@@ -1,12 +1,71 @@
 <?php
 
 /**
+ * Complementação de URL
+ * 
+ * @param string $url URL inserida pelo usuário
+ * @return string Retorna o SERVER_NAME com '/ ' caso precise e logo depois a $url digitada pelo usuário
+ */
+function url(string $url):string
+{
+    $servidor = filter_input(INPUT_SERVER,'SERVER_NAME');
+    $ambiente = ($servidor == 'localhost' ? URL_DESENVOLVIMENTO : URL_PRODUCAO);
+
+    if (str_starts_with($url,'/')){
+        return $ambiente.$url;    
+    }
+
+    return $ambiente.'/'.$url;
+}
+
+/**
+ * Diz o retorno do nome do servidor
+ * 
+ * @return bool Retorna true caso o nome do servidor seja localhost e false caso não
+ */
+function localhost():bool
+{
+    $servidor = filter_input(INPUT_SERVER,'SERVER_NAME');
+
+    if ($servidor == 'localhost'){
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+
+/**
+ * Valida a URL inserida pelo usuário
+ * 
+ * @param string $url URL digitado pelo usuário
+ * @return bool Retorna false caso seja incorreta e true caso seja válida
+ */
+function validarUrl (string $url):bool
+{
+    if (mb_strlen($url) < 10){
+        return false;
+    }
+    if (!str_contains($url, '.')){
+        return false;
+    }
+    if (str_contains($url, 'http://') or str_contains($url, 'https://')){
+        return true;
+    }
+    return false;
+}
+
+
+
+
+/**
  * Valida a URL inserido pelo usuário
  * 
  * @param string $url URL digitado pelo usuário
  * @return bool Retorna true caso a url seja válida e false caso não
  */
-function validarUrl (string $url):bool
+function validarUrlComFiltro (string $url):bool
 {
     return filter_var($url, FILTER_VALIDATE_URL);
 }

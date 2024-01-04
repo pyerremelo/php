@@ -2,6 +2,9 @@
     //Lista de funções do site PHP
     //https://www.php.net/manual/pt_BR/indexes.functions.php
 
+
+    echo "<h1>Usando allgumas funções de string (str)</h1>";
+
     //Texto base:
     $texto = "  Brasil é nota 10 ";
     echo "<h4>{mb_strlen()} Deste modo conta-se todos os espaços presentes na frase</h4>";

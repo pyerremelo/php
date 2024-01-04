@@ -1,6 +1,8 @@
 <?php
     include_once 'helpers.php';
 
+    echo "<h1>Operador ternário</h1>";
+
     $valor = 12;
     echo "<H4>Imprimindo valor com if e else<H4>";
     if ($valor) {
@@ -20,7 +22,7 @@
 
     echo "<BR>";
 
-    echo "<H4>Imprimindo valor com operador ternário de forma ainda mais resumida<H4>";
+    echo "<H4>Imprimindo valor com <u>operador ternário</u> de forma ainda mais resumida<H4>";
     echo ($valor ? : 0);
 
     echo "<H4>Função que formata os números<H4>";
