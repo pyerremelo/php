@@ -1,6 +1,58 @@
 <?php
 
 /**
+ * Função que retorna a data formatada padrão windows
+ * 
+ * @return string Data formatada
+ */
+function dataAtual ():string
+{
+    #Número do dia atual
+    $diaAtual = date ('j');
+
+    #Contador de posição do array $nomesDiasDaSemana
+    $diaSemana = date ('w'); // O 'w' já começa do 0
+
+    #Contador de posição do array $nomesDosMeses
+    $mes = date ('n') - 1; // -1 pois o 'n' começa do 1
+
+    #Número do ano atual
+    $ano = date ('Y');
+
+    #Array que possui os dias da semana
+    $nomesDiasDaSemana = [
+        'Domingo', // 0
+        'Segunda-feira',// 1
+        'Terça-feira', // 2
+        'Quarta-feira', // 3
+        'Quinta-feira', // 4
+        'Sexta-feira', // 5
+        'Sábado' // 6
+    ];
+
+    #Array que possui os nomes dos meses
+    $nomesDosMeses = [
+        'Janeiro', // 0
+        'Fevereiro', // 1
+        'Março', // 2
+        'Abril', // 3
+        'Maio', // 4
+        'Junho', // 5
+        'Julho', // 6
+        'Agosto', // 7
+        'Setembro', // 8
+        'Outubro', // 9
+        'Novembro', // 10
+        'Dezembo' // 11
+    ];
+
+    $dataFormatada = $nomesDiasDaSemana[$diaSemana].', '.$diaAtual.' de '.$nomesDosMeses[$mes].' de '.$ano;
+
+    return $dataFormatada;
+}
+
+
+/**
  * Complementação de URL
  * 
  * @param string $url URL inserida pelo usuário
