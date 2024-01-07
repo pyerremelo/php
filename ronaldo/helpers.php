@@ -1,6 +1,35 @@
 <?php
 
 /**
+ * Função que retorna uma URL amigável
+ * 
+ * @param string $titulo É o texto que o usuário escreverá
+ * @return string Retorna o $titulo formatado
+ */
+function slug (string $titulo):string
+{
+    #Segundo parâmetro que contêm os caracteres que serão substituídos
+    $mapa ['a'] = 'ÀÁÃÂÈÉÊÍÌÎÒÓÔÕÚÙÛÝàáãâèéêíìîóòôõúùûý@#$%&*()_+={[}]/?°:;.><ºª§-\|!';
+
+    #terceiro parâmetro que contêm os caracteres que substituirão os de cima
+    $mapa ['b'] = 'aaaaeeeiiioooouuuyaaaaeeeiiioooouuuy';
+
+    //Aqui está convertendo para UTF-8(mb_convert_encoding) e ao mesmo tempo está substituindo os caracteres $mapa['a'] pelo $mapa['b'] 
+    $slug = strtr(mb_convert_encoding($titulo, 'Windows-1252', 'UTF-8'), mb_convert_encoding($mapa['a'], 'Windows-1252', 'UTF-8'), mb_convert_encoding($mapa['b'], 'Windows-1252', 'UTF-8'));
+
+    //Tirando os espaços desnecessários e as tags HTML
+    $slug = strip_tags(trim($slug));
+
+    //Substituindo os espaços entre as palvras por '-'
+    $slug = str_replace(' ', '-', $slug);
+    $slug = str_replace(['-----','----','---','--','-'], '-', $slug);
+
+    #Formatado em letras minúsculas, sem espaços desnecessários e as palavras separadas por hífens
+    return strtolower($slug);
+}
+
+
+/**
  * Função que retorna a data formatada padrão windows
  * 
  * @return string Data formatada
