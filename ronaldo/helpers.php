@@ -223,15 +223,44 @@ function saudacao(): string
 {
     $hora = date('H');
 
-    if ($hora >= 0 && $hora <= 5) {
-        $saudacao = 'Boa madrugada';
-    } elseif ($hora >= 6 and $hora <= 12) {
-        $saudacao = 'Boa dia';
-    } elseif ($hora >= 13 and $hora <= 18) {
-        $saudacao = 'Boa tarde';
-    } else {
-        $saudacao = 'Boa noite';
-    }
+    // if ($hora >= 0 && $hora <= 5) {
+    //     $saudacao = 'Boa madrugada';
+    // } elseif ($hora >= 6 and $hora <= 12) {
+    //     $saudacao = 'Boa dia';
+    // } elseif ($hora >= 13 and $hora <= 18) {
+    //     $saudacao = 'Boa tarde';
+    // } else {
+    //     $saudacao = 'Boa noite';
+    // }
+
+    // switch ($hora){
+    //     case $hora >= 0 && $hora <= 5:
+    //         $saudacao = 'Boa madrugada';
+    //         break;
+    //     case $hora >= 6 and $hora <= 12:
+    //         $saudacao = 'Boa dia';
+    //         break;
+    //     case $hora >= 13 and $hora <= 18:
+    //         $saudacao = 'Boa tarde';
+    //         break;
+    //     default:
+    //         $saudacao = 'Boa noite';
+    // }
+
+    // $saudacao = match ($hora){
+    //     '0','1','2','3','4','5' => 'Boa madrugada',
+    //     '6','7','8','9','10','11','12' => 'Bom dia',
+    //     '13','14','15','16','17','18' => 'Boa tarde',
+    //     '19','20','21','22','23','24' => 'Boa noite'
+    // };
+
+    $saudacao = match (true){
+        $hora >= 0 and $hora <= 5 => 'Boa madrugada',
+        $hora >= 6 && $hora <= 12 => 'Bom dia',
+        $hora >= 13 and $hora <= 18 => 'Boa tarde',
+        default => 'Boa noite'
+    };
+
     return $saudacao;
 }
 
