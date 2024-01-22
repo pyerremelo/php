@@ -1,18 +1,50 @@
 <?php
 
 /**
+ * Função que é capaz de validar um CPF
+ * 
+ * @param string $cpf é o CPF que o usuário vai digitar separado por pontos (.) e hífens (-)
+ * @return bool Retorna true se o CPF for válido e false se não for
+ */
+function validarCpf(string $cpf): bool
+{
+    // Pega todos os caracteres digitados (inclusive os '.' e '-')
+    // Se for menor que 14 ou contiver 3 números sequenciais diretos (tipo: 111. '...') retorna false
+    if (mb_strlen($cpf) != 14 or preg_match('/(\d)\1(10)/', $cpf)) {
+        return false;
+    }
+
+    // Aqui retira-se os '.' e '-' deixando o número apenas
+    $cpf = preg_replace('/[^0-9]/','',$cpf);
+
+    // Aqui é o cálculo para validção de CPF
+    // Se der certo é true senão é false
+    for ($t = 9; $t < 11; $t++) {
+        for ($d = 0, $c = 0; $c < $t; $c++) {
+            $d += $cpf[$c] * (($t + 1) - $c);
+        }
+        $d = ((10 * $d) % 11) % 10;
+        if ($cpf[$c] != $d) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+/**
  * Função que retorna uma URL amigável
  * 
  * @param string $titulo É o texto que o usuário escreverá
  * @return string Retorna o $titulo formatado
  */
-function slug (string $titulo):string
+function slug(string $titulo): string
 {
     #Segundo parâmetro que contêm os caracteres que serão substituídos
-    $mapa ['a'] = 'ÀÁÃÂÈÉÊÍÌÎÒÓÔÕÚÙÛÝàáãâèéêíìîóòôõúùûý@#$%&*()_+={[}]/?°:;.><ºª§-\|!';
+    $mapa['a'] = 'ÀÁÃÂÈÉÊÍÌÎÒÓÔÕÚÙÛÝàáãâèéêíìîóòôõúùûý@#$%&*()_+={[}]/?°:;.><ºª§-\|!';
 
     #terceiro parâmetro que contêm os caracteres que substituirão os de cima
-    $mapa ['b'] = 'aaaaeeeiiioooouuuyaaaaeeeiiioooouuuy';
+    $mapa['b'] = 'aaaaeeeiiioooouuuyaaaaeeeiiioooouuuy';
 
     //Aqui está convertendo para UTF-8(mb_convert_encoding) e ao mesmo tempo está substituindo os caracteres $mapa['a'] pelo $mapa['b'] 
     $slug = strtr(mb_convert_encoding($titulo, 'Windows-1252', 'UTF-8'), mb_convert_encoding($mapa['a'], 'Windows-1252', 'UTF-8'), mb_convert_encoding($mapa['b'], 'Windows-1252', 'UTF-8'));
@@ -22,7 +54,7 @@ function slug (string $titulo):string
 
     //Substituindo os espaços entre as palvras por '-'
     $slug = str_replace(' ', '-', $slug);
-    $slug = str_replace(['-----','----','---','--','-'], '-', $slug);
+    $slug = str_replace(['-----', '----', '---', '--', '-'], '-', $slug);
 
     #Formatado em letras minúsculas, sem espaços desnecessários e as palavras separadas por hífens
     return strtolower($slug);
@@ -34,24 +66,24 @@ function slug (string $titulo):string
  * 
  * @return string Data formatada
  */
-function dataAtual ():string
+function dataAtual(): string
 {
     #Número do dia atual
-    $diaAtual = date ('j');
+    $diaAtual = date('j');
 
     #Contador de posição do array $nomesDiasDaSemana
-    $diaSemana = date ('w'); // O 'w' já começa do 0
+    $diaSemana = date('w'); // O 'w' já começa do 0
 
     #Contador de posição do array $nomesDosMeses
-    $mes = date ('n') - 1; // -1 pois o 'n' começa do 1
+    $mes = date('n') - 1; // -1 pois o 'n' começa do 1
 
     #Número do ano atual
-    $ano = date ('Y');
+    $ano = date('Y');
 
     #Array que possui os dias da semana
     $nomesDiasDaSemana = [
         'Domingo', // 0
-        'Segunda-feira',// 1
+        'Segunda-feira', // 1
         'Terça-feira', // 2
         'Quarta-feira', // 3
         'Quinta-feira', // 4
@@ -75,7 +107,7 @@ function dataAtual ():string
         'Dezembo' // 11
     ];
 
-    $dataFormatada = $nomesDiasDaSemana[$diaSemana].', '.$diaAtual.' de '.$nomesDosMeses[$mes].' de '.$ano;
+    $dataFormatada = $nomesDiasDaSemana[$diaSemana] . ', ' . $diaAtual . ' de ' . $nomesDosMeses[$mes] . ' de ' . $ano;
 
     return $dataFormatada;
 }
@@ -87,16 +119,16 @@ function dataAtual ():string
  * @param string $url URL inserida pelo usuário
  * @return string Retorna o SERVER_NAME com '/ ' caso precise e logo depois a $url digitada pelo usuário
  */
-function url(string $url):string
+function url(string $url): string
 {
-    $servidor = filter_input(INPUT_SERVER,'SERVER_NAME');
+    $servidor = filter_input(INPUT_SERVER, 'SERVER_NAME');
     $ambiente = ($servidor == 'localhost' ? URL_DESENVOLVIMENTO : URL_PRODUCAO);
 
-    if (str_starts_with($url,'/')){
-        return $ambiente.$url;    
+    if (str_starts_with($url, '/')) {
+        return $ambiente . $url;
     }
 
-    return $ambiente.'/'.$url;
+    return $ambiente . '/' . $url;
 }
 
 /**
@@ -104,14 +136,13 @@ function url(string $url):string
  * 
  * @return bool Retorna true caso o nome do servidor seja localhost e false caso não
  */
-function localhost():bool
+function localhost(): bool
 {
-    $servidor = filter_input(INPUT_SERVER,'SERVER_NAME');
+    $servidor = filter_input(INPUT_SERVER, 'SERVER_NAME');
 
-    if ($servidor == 'localhost'){
+    if ($servidor == 'localhost') {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -123,15 +154,15 @@ function localhost():bool
  * @param string $url URL digitado pelo usuário
  * @return bool Retorna false caso seja incorreta e true caso seja válida
  */
-function validarUrl (string $url):bool
+function validarUrl(string $url): bool
 {
-    if (mb_strlen($url) < 10){
+    if (mb_strlen($url) < 10) {
         return false;
     }
-    if (!str_contains($url, '.')){
+    if (!str_contains($url, '.')) {
         return false;
     }
-    if (str_contains($url, 'http://') or str_contains($url, 'https://')){
+    if (str_contains($url, 'http://') or str_contains($url, 'https://')) {
         return true;
     }
     return false;
@@ -146,7 +177,7 @@ function validarUrl (string $url):bool
  * @param string $url URL digitado pelo usuário
  * @return bool Retorna true caso a url seja válida e false caso não
  */
-function validarUrlComFiltro (string $url):bool
+function validarUrlComFiltro(string $url): bool
 {
     return filter_var($url, FILTER_VALIDATE_URL);
 }
@@ -158,7 +189,7 @@ function validarUrlComFiltro (string $url):bool
  * @param string $email Endereço de email digitado pelo usuário
  * @return bool Retorna true caso o email seja válido e false caso não
  */
-function validarEmail (string $email):bool
+function validarEmail(string $email): bool
 {
     return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
@@ -170,7 +201,7 @@ function validarEmail (string $email):bool
  * @param string $data Data informada pelo usuário
  * @return string Tempo decorrido da data informada
  */
-function contarTempo (string $data):string
+function contarTempo(string $data): string
 {
     $agora = strtotime(date('Y-m-d H:i:s'));
     $tempo = strtotime($data);
@@ -184,20 +215,20 @@ function contarTempo (string $data):string
     $mes = round($diferenca / 2_419_200);
     $anos = round($diferenca / 29_030_400);
 
-    if ($segs <= 59){
+    if ($segs <= 59) {
         return 'agora';
-    } else if ($min <= 59){
-        return $min == 1 ? 'à 1 minuto' : 'à '.$min.' minutos';
-    } else if ($hrs <= 23){
-        return $hrs == 1 ? 'à 1 hora' : 'à '.$hrs.' horas';
-    } else if ($dias <= 6){
-        return $dias == 1 ? 'ontem' : 'à '.$dias.' dias';
-    } else if ($sem <= 3){
-        return $sem == 1 ? 'à 1 semana' : 'à '.$sem.' semanas';
-    } else if ($mes <= 11){
-        return $mes == 1 ? 'à 1 mês' : 'à '.$mes.' meses';
+    } else if ($min <= 59) {
+        return $min == 1 ? 'à 1 minuto' : 'à ' . $min . ' minutos';
+    } else if ($hrs <= 23) {
+        return $hrs == 1 ? 'à 1 hora' : 'à ' . $hrs . ' horas';
+    } else if ($dias <= 6) {
+        return $dias == 1 ? 'ontem' : 'à ' . $dias . ' dias';
+    } else if ($sem <= 3) {
+        return $sem == 1 ? 'à 1 semana' : 'à ' . $sem . ' semanas';
+    } else if ($mes <= 11) {
+        return $mes == 1 ? 'à 1 mês' : 'à ' . $mes . ' meses';
     } else {
-        return $anos == 1 ? 'à 1 ano' : 'à '.$anos.' anos';
+        return $anos == 1 ? 'à 1 ano' : 'à ' . $anos . ' anos';
     }
 }
 
@@ -208,7 +239,7 @@ function contarTempo (string $data):string
  * @param float $valor valor que vai ser formatado. Caso não seja inserido nada, será apresentado 0
  * @return string valor formatado
  */
-function formatarValor (float $valor=null):string
+function formatarValor(float $valor = null): string
 {
     return number_format(($valor ? $valor : 0), 2, ',', '.');
 }
@@ -254,7 +285,7 @@ function saudacao(): string
     //     '19','20','21','22','23','24' => 'Boa noite'
     // };
 
-    $saudacao = match (true){
+    $saudacao = match (true) {
         $hora >= 0 and $hora <= 5 => 'Boa madrugada',
         $hora >= 6 && $hora <= 12 => 'Bom dia',
         $hora >= 13 and $hora <= 18 => 'Boa tarde',
@@ -277,7 +308,7 @@ function resumirTexto(string $texto, int $limite, string $continue = '...')
 {
 
     $textoLimpo = trim(strip_tags($texto));
-    if (mb_strlen($textoLimpo) <= $limite){
+    if (mb_strlen($textoLimpo) <= $limite) {
         return $textoLimpo;
     }
 
@@ -285,5 +316,3 @@ function resumirTexto(string $texto, int $limite, string $continue = '...')
 
     return $resumirTexto . $continue;
 }
-
-?>
